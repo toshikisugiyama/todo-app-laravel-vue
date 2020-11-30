@@ -1,0 +1,11 @@
+FROM node:14.15-alpine as node
+FROM nginx:1.19-alpine
+SHELL [ "/bin/ash", "-oeux", "pipefail", "-c" ]
+ENV TZ=UTC
+RUN apk update && \
+  apk add --update --no-cache --virtual=.build-dependencies g++
+COPY --from=node /usr/local/bin /usr/local/bin
+COPY --from=node /usr/local/lib /usr/local/lib
+COPY --from=node /opt /opt
+COPY ./docker/nginx/default.conf /etc/nginx/conf.d/default.conf
+WORKDIR /app

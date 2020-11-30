@@ -1,0 +1,46 @@
+version: "3.8"
+volumes:
+  php-fpm-socket:
+    name: sock
+  db-store:
+services:
+  nginx:
+    container_name: ${APP_NAME:-test}-nginx
+    build:
+      context: .
+      dockerfile: ./docker/nginx/Dockerfile
+    ports:
+      - "${WEB_PORT:-80}:80"
+      - "3000:3000"
+      - "3001:3001"
+    volumes:
+      - php-fpm-socket:/var/run/php-fpm
+      - ./src/:/app
+  php-fpm:
+    container_name: ${APP_NAME:-test}-php-fpm
+    build:
+      context: .
+      dockerfile: ./docker/php-fpm/Dockerfile
+    volumes:
+      - php-fpm-socket:/var/run/php-fpm
+      - ./src/:/app
+    environment:
+      - DB_CONNECTION=mysql
+      - DB_HOST=${DB_HOST:-mysql}
+      - DB_PORT=3306
+      - DB_DATABASE=${DB_NAME:-test}
+      - DB_USERNAME=${DB_USER:-test_user}
+      - DB_PASSWORD=${DB_PASSWORD:-test}
+  mysql:
+    container_name: ${APP_NAME:-test}-mysql
+    build:
+      context: .
+      dockerfile: ./docker/mysql/Dockerfile
+    volumes:
+      - db-store:/var/lib/mysql
+    environment:
+      - MYSQL_DATABASE=${DB_NAME:-test}
+      - MYSQL_USER=${DB_USER:-test_user}
+      - MYSQL_PASSWORD=${DB_PASSWORD:-test}
+      - MYSQL_ROOT_PASSWORD=${DB_ROOT_PASSWORD:-test}
+      - TZ=$TZ
