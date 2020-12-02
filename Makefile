@@ -16,6 +16,6 @@ migrate:
 watch:
 	docker-compose exec nginx npm run watch
 route:
-	docker-compose exec php-fpm php artisan route:list
+	docker-compose exec php-fpm php artisan route:list -c
 install-laravel:
 	docker-compose exec php-fpm composer create-project --prefer-dist laravel/laravel .
