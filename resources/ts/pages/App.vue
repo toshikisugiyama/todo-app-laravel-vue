@@ -1,6 +1,9 @@
 <template lang="pug">
   #app
-    router-view
+    app-header
+    main
+      router-view
+    app-footer
 </template>
 
 <style lang="scss" scoped>
@@ -9,7 +12,12 @@
 
 <script lang="ts">
 import Vue from 'vue'
+import AppHeader from '../components/AppHeader.vue'
+import AppFooter from '../components/AppFooter.vue'
 export default Vue.extend({
-
+  components: {
+    AppHeader,
+    AppFooter
+  }
 })
 </script>

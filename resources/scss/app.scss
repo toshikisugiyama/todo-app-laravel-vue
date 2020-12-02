@@ -1,7 +1,15 @@
 @import "reset-css";
-$primary: #6610f2;
+$primary: #000066;
+$secondary:#fff;
 $container-max-widths: (
   xl: 960px,
   xxl: 960px
 );
 @import "../../node_modules/bootstrap/scss/bootstrap.scss";
+html,
+body {
+  background-color: $primary;
+}
+main {
+  background-color: $secondary;
+}

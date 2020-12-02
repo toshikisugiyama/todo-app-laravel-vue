@@ -1,5 +1,5 @@
 <template lang="pug">
-  .container.py-5
+  .container.py-5.text-primary
     .row.row-cols-1.justify-content-center
       h1.col.text-center.mb-4 {{ title }}
       .row.row-cols-1.justify-content-center
@@ -9,10 +9,10 @@
             input.p-1.col-12(:name="item.id" :id="item.id" :type="item.type" v-model="authForm[item.id]")
           p.col-sm-9.mx-auto.justify-self-end.text-danger.text-right(v-if="errorMessages && errorMessages[item.id]") {{ errorMessages[item.id][0] }}
         .row.row-cols-auto.justify-content-center.mt-3(v-if="isLoginPage")
-          button.col.btn.btn-light.mr-3(@click.prevent="toRegister") 新規登録
+          button.col.btn.btn-outline-primary.mr-3(@click.prevent="toRegister") 新規登録
           button.col.btn.btn-primary(@click.prevent="login") ログイン
         .row.row-cols-auto.justify-content-center.mt-3(v-else)
-          button.col.btn.btn-light.mr-3(@click.prevent="toLogin") ログイン
+          button.col.btn.btn-outline-primary.mr-3(@click.prevent="toLogin") ログイン
           button.col.btn.btn-primary(@click.prevent="register") 新規登録
 </template>
 
