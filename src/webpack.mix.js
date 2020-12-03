@@ -1,5 +1,14 @@
 const mix = require('laravel-mix')
-mix.browserSync('nginx')
+mix.browserSync({
+    files: [
+      'app/**/*',
+      'public/**/*',
+      'resources/views/**/*',
+      'routes/**/*'
+    ],
+    proxy: 'nginx',
+    open: false
+  })
   .ts('resources/ts/app.ts', 'public/js')
   .sass('resources/scss/app.scss', 'public/css')
   .webpackConfig({

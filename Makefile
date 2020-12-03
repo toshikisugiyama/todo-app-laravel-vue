@@ -19,3 +19,7 @@ route:
 	docker-compose exec php-fpm php artisan route:list -c
 install-laravel:
 	docker-compose exec php-fpm composer create-project --prefer-dist laravel/laravel .
+serve:
+	docker-compose exec php-fpm php artisan serve --host=localhost --port=80
+watch-poll:
+	docker-compose exec nginx npm run watch-poll

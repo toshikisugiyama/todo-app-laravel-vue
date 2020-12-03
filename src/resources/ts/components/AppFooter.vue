@@ -3,6 +3,12 @@
     .row.row-cols-1.align-items-center
 </template>
 
+<style lang="scss" scoped>
+footer {
+  min-height: 80px;
+}
+</style>
+
 <script lang="ts">
 import Vue from 'vue'
 export default Vue.extend({
