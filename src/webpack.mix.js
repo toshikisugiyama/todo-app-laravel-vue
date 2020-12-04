@@ -30,3 +30,4 @@ mix.browserSync({
     }
   })
   .version()
+  .sourceMaps()

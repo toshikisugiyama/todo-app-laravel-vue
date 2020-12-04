@@ -23,3 +23,5 @@ serve:
 	docker-compose exec php-fpm php artisan serve --host=localhost --port=80
 watch-poll:
 	docker-compose exec nginx npm run watch-poll
+tinker:
+	docker-compose exec php-fpm php artisan tinker
