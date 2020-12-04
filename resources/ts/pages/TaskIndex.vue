@@ -19,20 +19,22 @@
         .spinner-border.m-5(role="status")
           span.visually-hidden Loading...
     .row.row-cols-1(v-else)
-      ul.col.list-group.px-1.px-sm-auto(v-if="selectedStatus === 'waiting'")
+      ul.col.list-group.px-1.px-sm-auto(v-if="selectedStatus === 'waiting' && waitingTasks.length")
         li.list-group-item.list-group-item-action.d-flex.justify-content-between.align-items-center(v-for="task in waitingTasks" :key="task.id")
           .col-1.mr-1
             input.form-check-input(:id="task.id" :name="task.id" :value="task" v-model="selectedTasks" type="checkbox")
           .col-11.d-flex.justify-content-between.align-items-center(@click="selectTask(task.id)")
             h3.m-0 {{ task.title }}
             small {{ task.date }}
-      ul.col.list-group.px-1.px-sm-auto(v-else)
-        li.list-group-item.list-group-item-action.d-flex.justify-content-between.align-items-center(v-for="task in doneTasks" :key="task.id")
+      ul.col.list-group.px-1.px-sm-auto(v-if="selectedStatus === 'done' && finishedTasks.length")
+        li.list-group-item.list-group-item-action.d-flex.justify-content-between.align-items-center(v-for="task in finishedTasks" :key="task.id")
           .col-1.mr-1
             input.form-check-input(:id="task.id" :name="task.id" :value="task" v-model="selectedTasks" type="checkbox")
           .col-11.d-flex.justify-content-between.align-items-center(@click="selectTask(task.id)")
             h3.m-0 {{ task.title }}
             small {{ task.date }}
+      .col(v-else)
+        p.py-5.m-0.text-center タスクはありません。
 </template>
 
 <style lang="scss" scoped>
@@ -71,13 +73,13 @@ export default Vue.extend({
     waitingTasks(): Task[] {
       return this.$store.getters['task/getWaitingTasks']
     },
-    doneTasks(): Task[] {
-      return this.$store.getters['task/getDoneTasks']
+    finishedTasks(): Task[] {
+      return this.$store.getters['task/getFinishedTasks']
     },
   },
   methods: {
     selectAll(){
-      const tasks: Task[] = this.selectedStatus === 'waiting' ? this.waitingTasks : this.doneTasks
+      const tasks: Task[] = this.selectedStatus === 'waiting' ? this.waitingTasks : this.finishedTasks
       tasks.map(task => {
         this.selectedTasks.push(task)
       })
@@ -103,7 +105,7 @@ export default Vue.extend({
     selectedStatus() {
       this.selectedTasks = []
       if (this.selectedStatus === 'done') {
-        return this.$router.push({name: 'DoneTaskIndex'})
+        return this.$router.push({name: 'FinishedTaskIndex'})
       }
       return this.$router.push({name: 'TaskIndex'})
     }
