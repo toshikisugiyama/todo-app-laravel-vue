@@ -16,7 +16,7 @@ const routes = [
     name: 'TaskIndex',
     component: TaskIndex,
     children: [
-      {name: 'DoneTaskIndex', path: 'done', component: TaskIndex}
+      {name: 'FinishedTaskIndex', path: 'done', component: TaskIndex}
     ],
   }
 ]
