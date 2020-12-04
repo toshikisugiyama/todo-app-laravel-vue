@@ -15,6 +15,9 @@ const routes = [
     path: '/',
     name: 'TaskIndex',
     component: TaskIndex,
+    children: [
+      {name: 'DoneTaskIndex', path: 'done', component: TaskIndex}
+    ],
   }
 ]
 const router = new VueRouter({
