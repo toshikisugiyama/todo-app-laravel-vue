@@ -25,3 +25,7 @@ watch-poll:
 	docker-compose exec nginx npm run watch-poll
 tinker:
 	docker-compose exec php-fpm php artisan tinker
+composer-i:
+	docker-compose exec php-fpm composer install
+npm-i:
+	docker-compose exec nginx npm install
