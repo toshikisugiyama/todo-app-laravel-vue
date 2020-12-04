@@ -1,7 +1,7 @@
 import axios, { AxiosResponse } from 'axios'
 interface State {
   user: User | null,
-  apiStatus: boolean | null,
+  isLoading: boolean,
   errorMessages: Object | null
 }
 interface User {
@@ -15,7 +15,7 @@ interface User {
 }
 const state: State = {
   user: null,
-  apiStatus: null,
+  isLoading: false,
   errorMessages: null
 }
 const getters = {
@@ -25,8 +25,8 @@ const mutations = {
   setUser (state: State, user: User) {
     state.user = user
   },
-  setApiStatus (state: State, apiStatus: boolean | null) {
-    state.apiStatus = apiStatus
+  setLoading (state: State, isLoading: boolean) {
+    state.isLoading = isLoading
   },
   setErrorMessages(state: State, errorMessages: Object | null) {
     state.errorMessages= errorMessages
@@ -35,56 +35,55 @@ const mutations = {
 const actions = {
   resetAuthErrors({commit}: {commit: any}) {
     commit('setErrorMessages', null)
-    commit('setApiStatus', null)
   },
   async register({commit}: {commit: any}, user: User) {
     try {
-      commit('setApiStatus', null)
+      commit('setLoading', true)
       await axios.get('/sanctum/csrf-cookie')
       await axios.post('/api/register', user)
-      commit('setApiStatus', true)
       commit('setErrorMessages', null)
+      commit('setLoading', false)
     } catch ({response}) {
-      commit('setApiStatus', false)
       commit('setErrorMessages', response.data.errors)
+      commit('setLoading', false)
     }
   },
   async login({commit}: {commit: any}, user: User) {
     try {
-      commit('setApiStatus', null)
+      commit('setLoading', true)
       await axios.get('/sanctum/csrf-cookie')
       const {data} = await axios.post('/api/login', user)
-      commit('setApiStatus', true)
       commit('setUser', data)
       commit('setErrorMessages', null)
+      commit('setLoading', false)
     } catch ({response}) {
-      commit('setApiStatus', false)
       commit('setErrorMessages', response.data.errors)
+      commit('setLoading', false)
     }
   },
   async logout({commit}: {commit: any}) {
     try {
-      commit('setApiStatus', null)
+      commit('setLoading', true)
       await axios.get('/sanctum/csrf-cookie')
       await axios.post('/api/logout')
-      commit('setApiStatus', true)
       commit('setUser', null)
       commit('setErrorMessages', null)
+      commit('setLoading', false)
     } catch ({response}) {
-      commit('setApiStatus', false)
       commit('setErrorMessages', response.data.errors)
+      commit('setLoading', false)
     }
   },
   async checkCurrentUser({commit}: {commit: any}) {
     try {
-      commit('setApiStatus', null)
+      commit('setLoading', true)
       const {data} = await axios.get('/api/user')
       const user = data || null
-      commit('setApiStatus', true)
       commit('setUser', user)
+      commit('setLoading', false)
     } catch ({response}) {
-      commit('setApiStatus', false)
       commit('setErrorMessages', response.data)
+      commit('setLoading', false)
     }
   }
 }
