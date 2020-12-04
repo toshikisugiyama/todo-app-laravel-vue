@@ -5,7 +5,7 @@
         h1.m-0.text-light ToDo App
       .col.d-flex.justify-content-end
         .col-auto.p-0.rounded.bg-light(v-if="currentUser")
-          button.btn.btn-outline-primary.btn-sm(@click.prevent="logout") ログアウト
+          button.btn.btn-outline-primary.btn-sm(@click.prevent="logout" :disabled="isLoading") ログアウト
 </template>
 
 <script lang="ts">
@@ -14,7 +14,10 @@ export default Vue.extend({
   computed: {
     currentUser () {
       return this.$store.state.auth.user
-    }
+    },
+    isLoading(): boolean {
+      return this.$store.state.task.isLoading
+    },
   },
   methods: {
     async logout () {
