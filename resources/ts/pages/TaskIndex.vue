@@ -4,16 +4,16 @@
       h2.col.text-center {{ selectedStatus === 'done' ? '完了済み' : '' }}タスク
     .row.row-cols-3.row-cols-sm-auto.justify-content-end.mb-2
       .col.d-flex.align-items-center
-        select.form-select.form-select-sm.w-100(v-model="selectedStatus")
+        select.form-select.form-select-sm.w-100(v-model="selectedStatus" :disabled="isLoading")
           option(v-for="taskStatus in taskStatuses" :value="taskStatus.value") {{ taskStatus.label }}
       .col.d-flex.align-items-center(v-if="!selectedTasks.length")
-        button.btn.btn-sm.btn-success.w-100(@click="selectAll") 全選択
+        button.btn.btn-sm.btn-success.w-100(@click="selectAll" :disabled="isLoading") 全選択
       .col.d-flex.align-items-center(v-else)
-        button.btn.btn-sm.btn-primary.w-100(@click="clearAll") 選択解除
+        button.btn.btn-sm.btn-primary.w-100(@click="clearAll" :disabled="isLoading") 選択解除
       .col.d-flex.align-items-center(v-if="selectedStatus === 'waiting'")
-        button.btn.btn-sm.btn-danger.w-100(@click="finishTasks" :disabled="!selectedTasks.length") 完了
+        button.btn.btn-sm.btn-danger.w-100(@click="finishTasks" :disabled="!selectedTasks.length || isLoading") 完了
       .col.d-flex.align-items-center(v-else)
-        button.btn.btn-sm.btn-danger.w-100.overflow-hidden(@click="unfinishTasks" :disabled="!selectedTasks.length") 未完了に戻す
+        button.btn.btn-sm.btn-danger.w-100.overflow-hidden(@click="unfinishTasks" :disabled="!selectedTasks.length || isLoading") 未完了に戻す
     .row.row-cols-1(v-if="isLoading")
       .col.d-flex.justify-content-center
         .spinner-border.m-5(role="status")
@@ -26,7 +26,7 @@
           .col-11.d-flex.justify-content-between.align-items-center(@click="selectTask(task.id)")
             h3.m-0 {{ task.title }}
             small {{ task.date }}
-      ul.col.list-group.px-1.px-sm-auto(v-if="selectedStatus === 'done' && finishedTasks.length")
+      ul.col.list-group.px-1.px-sm-auto(v-else-if="selectedStatus === 'done' && finishedTasks.length")
         li.list-group-item.list-group-item-action.d-flex.justify-content-between.align-items-center(v-for="task in finishedTasks" :key="task.id")
           .col-1.mr-1
             input.form-check-input(:id="task.id" :name="task.id" :value="task" v-model="selectedTasks" type="checkbox")
