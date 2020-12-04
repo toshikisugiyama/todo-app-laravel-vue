@@ -22,7 +22,7 @@ const state: State = {
 }
 const getters = {
   getWaitingTasks: (state: State) => state.tasks?.filter(task => task.status === 'waiting'),
-  getDoneTasks: (state: State) => state.tasks?.filter(task => task.status === 'done')
+  getFinishedTasks: (state: State) => state.tasks?.filter(task => task.status === 'done')
 }
 const mutations = {
   setLoading(state: State, isLoading: boolean) {
