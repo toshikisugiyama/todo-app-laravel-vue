@@ -2,27 +2,30 @@ import Vue from 'vue'
 import VueRouter, { Route } from 'vue-router'
 import store from './store'
 import Auth from './pages/Auth.vue'
+import TaskIndex from './pages/TaskIndex.vue'
 
 Vue.use(VueRouter)
 const routes = [
   {
     path: '/login',
-    name: 'login',
-    component: Auth
+    name: 'Auth',
+    component: Auth,
   },
   {
     path: '/',
-    beforeEnter: (to: Route, from: Route, next: Function) => {
-      if (!store.getters['auth/isLogin']) {
-        next('/login')
-      } else {
-        next()
-      }
-    }
+    name: 'TaskIndex',
+    component: TaskIndex,
+    children: [
+      {name: 'DoneTaskIndex', path: 'done', component: TaskIndex}
+    ],
   }
 ]
 const router = new VueRouter({
   mode: 'history',
   routes
+})
+router.beforeEach((to: Route, from: Route, next: Function) => {
+  if (to.name !== 'Auth' && !store.getters['auth/isLogin']) next({name: 'Auth'})
+  else next()
 })
 export default router
