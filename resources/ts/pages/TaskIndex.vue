@@ -15,9 +15,7 @@
       .col.d-flex.align-items-center(v-else)
         button.btn.btn-sm.btn-danger.w-100.overflow-hidden(@click="unfinishTasks" :disabled="!selectedTasks.length || isLoading") 未完了に戻す
     .row.row-cols-1(v-if="isLoading")
-      .col.d-flex.justify-content-center
-        .spinner-border.m-5(role="status")
-          span.visually-hidden Loading...
+      task-loading
     .row.row-cols-1(v-else)
       ul.col.list-group.px-1.px-sm-auto(v-if="selectedStatus === 'waiting' && waitingTasks.length")
         li.list-group-item.list-group-item-action.d-flex.justify-content-between.align-items-center(v-for="task in waitingTasks" :key="task.id")
@@ -45,6 +43,7 @@
 
 <script lang="ts">
 import Vue from 'vue'
+import TaskLoading from '../components/TaskLoading.vue'
 interface Task {
   created_at: string
   date: string
@@ -56,6 +55,9 @@ interface Task {
   user_id: number
 }
 export default Vue.extend({
+  components: {
+    TaskLoading
+  },
   data(){
     return {
       taskStatuses: [
@@ -98,7 +100,7 @@ export default Vue.extend({
       }
     },
     selectTask(taskId: string){
-      this.$router.push({path: `/${taskId}`, params: {taskId}})
+      this.$router.push({name: 'TaskItem', params: {taskId}})
     },
   },
   watch: {
@@ -111,7 +113,9 @@ export default Vue.extend({
     }
   },
   mounted() {
-    this.$store.dispatch('task/indexTasks')
+    if (!this.$store.state.task.tasks) {
+      this.$store.dispatch('task/indexTasks')
+    }
   }
 })
 </script>
