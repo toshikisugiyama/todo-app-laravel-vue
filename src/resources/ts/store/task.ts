@@ -21,6 +21,7 @@ const state: State = {
   errorMessages: null
 }
 const getters = {
+  getSelectedTask: (state: State) => (taskId: string) => state.tasks?.find(task => task.id.toString(10) === taskId),
   getWaitingTasks: (state: State) => state.tasks?.filter(task => task.status === 'waiting'),
   getFinishedTasks: (state: State) => state.tasks?.filter(task => task.status === 'done')
 }
@@ -47,7 +48,7 @@ const actions = {
     } catch (error) {
       commit('setErrorMessages', error)
     }
-  }
+  },
 }
 
 export default {
