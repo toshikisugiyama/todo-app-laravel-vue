@@ -37,7 +37,11 @@ export default Vue.extend({
   },
   methods: {
     goBack() {
-      this.$router.go(-1)
+      if (this.selectedTask.status === 'waiting') {
+        this.$router.push({name: 'TaskIndex'})
+      } else {
+        this.$router.push({name: 'FinishedTaskIndex'})
+      }
     },
     toEdit() {
       this.$router.push({name: 'TaskEdit'})
