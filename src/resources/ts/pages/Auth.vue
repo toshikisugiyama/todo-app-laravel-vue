@@ -80,7 +80,7 @@ export default Vue.extend({
     async login() {
       await this.$store.dispatch('auth/login', this.authForm)
       if(!this.errorMessages) {
-        this.$router.push('/')
+        this.$router.push({name: 'TaskIndex'})
       }
     },
     toLogin() {
