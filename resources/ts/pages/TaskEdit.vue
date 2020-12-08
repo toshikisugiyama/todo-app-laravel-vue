@@ -1,5 +1,7 @@
 <template lang="pug">
   .container.py-5.text-primary
+    .row.row-cols-1.justify-content-center
+      h2.col.text-center.mb-4 タスク編集
     .row.row-cols-1(v-if="isLoading")
       task-loading
     .row.row-cols-1(v-else)
@@ -102,7 +104,7 @@ export default Vue.extend({
     }
   },
   mounted() {
-    if (!this.$store.state.task.tasks) {
+    if (!this.$store.state.task.tasks.length) {
       this.$store.dispatch('task/indexTasks')
     }
   }

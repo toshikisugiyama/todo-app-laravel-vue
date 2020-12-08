@@ -4,8 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Models\Task;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Log;
 
 class TaskController extends Controller
 {
@@ -16,8 +14,9 @@ class TaskController extends Controller
      */
     public function index()
     {
-        $user_id = Auth::id();
-        return response(Task::where('user_id', $user_id)->get());
+        $user_id = auth()->id();
+        $response = Task::where('user_id', $user_id)->get();
+        return response()->json($response);
     }
 
     /**
@@ -28,7 +27,11 @@ class TaskController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $default = [
+            "user_id" => auth()->id()
+        ];
+        $response = Task::create(array_merge($request->all(), $default));
+        return response()->json($response);
     }
 
     /**
@@ -51,10 +54,10 @@ class TaskController extends Controller
      */
     public function update(Request $request, Task $task)
     {
-        $task->find($request->id)
+        $response = $task->find($request->id)
             ->fill($request->all())
             ->save();
-        return response($task->find($request->id));
+        return response()->json($response);
     }
 
     /**
