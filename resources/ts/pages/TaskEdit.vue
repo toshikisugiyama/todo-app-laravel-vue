@@ -46,11 +46,9 @@ export default Vue.extend({
     TaskLoading
   },
   data(): {
-    formItems: any[]
     editedTask: EditedTask
   } {
     return {
-      formItems: ['title', 'date', 'note'],
       editedTask: {
         title: null,
         date: null,

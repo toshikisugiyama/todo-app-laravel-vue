@@ -45,14 +45,14 @@
 import Vue from 'vue'
 import TaskLoading from '../components/TaskLoading.vue'
 interface Task {
-  created_at: string
-  date: string
-  id: number
-  note: string
-  status: string
-  title: string
-  updated_at: string
-  user_id: number
+  created_at?: string
+  date?: string
+  id?: number
+  note?: string
+  status?: string
+  title?: string
+  updated_at?: string
+  user_id?: number
 }
 export default Vue.extend({
   components: {
@@ -73,10 +73,10 @@ export default Vue.extend({
       return this.$store.state.task.isLoading
     },
     waitingTasks(): Task[] {
-      return this.$store.getters['task/getWaitingTasks']
+      return this.$store.getters['task/getWaitingTasks'] || []
     },
     finishedTasks(): Task[] {
-      return this.$store.getters['task/getFinishedTasks']
+      return this.$store.getters['task/getFinishedTasks'] || []
     },
   },
   methods: {
@@ -89,15 +89,20 @@ export default Vue.extend({
     clearAll(){
       this.selectedTasks = []
     },
-    finishTasks(){
+    async changeStatus(status: string) {
       if (this.selectedTasks.length) {
-        console.log(this.selectedTasks)
+        await this.selectedTasks.map((task:Task) => {
+          task.status = status
+          this.$store.dispatch('task/editTask', task)
+        })
+        this.$store.dispatch('task/indexTasks')
       }
     },
-    unfinishTasks(){
-      if (this.selectedTasks.length) {
-        console.log(this.selectedTasks)
-      }
+    async finishTasks(){
+      await this.changeStatus('done')
+    },
+    async unfinishTasks(){
+      await this.changeStatus('waiting')
     },
     selectTask(taskId: string){
       this.$router.push({name: 'TaskItem', params: {taskId}})
@@ -113,7 +118,7 @@ export default Vue.extend({
     }
   },
   mounted() {
-    if (!this.$store.state.task.tasks) {
+    if (!this.$store.state.task.tasks.length) {
       this.$store.dispatch('task/indexTasks')
     }
   }
