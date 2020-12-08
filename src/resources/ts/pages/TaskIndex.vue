@@ -1,30 +1,36 @@
 <template lang="pug">
   .container.py-5.text-primary
     .row.row-cols-1.justify-content-center
-      h2.col.text-center {{ selectedStatus === 'done' ? '完了済み' : '' }}タスク
-    .row.row-cols-3.row-cols-sm-auto.justify-content-end.mb-2
-      .col.d-flex.align-items-center
-        select.form-select.form-select-sm.w-100(v-model="selectedStatus" :disabled="isLoading")
-          option(v-for="taskStatus in taskStatuses" :value="taskStatus.value") {{ taskStatus.label }}
-      .col.d-flex.align-items-center(v-if="!selectedTasks.length")
-        button.btn.btn-sm.btn-success.w-100(@click="selectAll" :disabled="isLoading") 全選択
-      .col.d-flex.align-items-center(v-else)
-        button.btn.btn-sm.btn-primary.w-100(@click="clearAll" :disabled="isLoading") 選択解除
-      .col.d-flex.align-items-center(v-if="selectedStatus === 'waiting'")
-        button.btn.btn-sm.btn-danger.w-100(@click="finishTasks" :disabled="!selectedTasks.length || isLoading") 完了
-      .col.d-flex.align-items-center(v-else)
-        button.btn.btn-sm.btn-danger.w-100.overflow-hidden(@click="unfinishTasks" :disabled="!selectedTasks.length || isLoading") 未完了に戻す
+      h2.col.text-center.mb-4 {{ selectedStatus === 'done' ? '完了済み' : '' }}タスク
+    .row.row-cols-auto.justify-content-between.mb-2
+      .col.px-1
+        .row.row-cols-auto
+          .col.d-flex.align-items-center.pr-1.pr-sm-2
+            select.form-select.form-select-sm.w-100(v-model="selectedStatus" :disabled="isLoading")
+              option(v-for="taskStatus in taskStatuses" :value="taskStatus.value") {{ taskStatus.label }}
+          .col.d-flex.align-items-center.px-0.px-sm-2(v-if="!selectedTasks.length")
+            button.btn.btn-sm.btn-success.w-100(@click="selectAll" :disabled="isLoading") 全選択
+          .col.d-flex.align-items-center.px-0.px-sm-2(v-else)
+            button.btn.btn-sm.btn-primary.w-100(@click="clearAll" :disabled="isLoading") 選択解除
+          .col.d-flex.align-items-center.px-1.px-sm-2(v-if="selectedStatus === 'waiting'")
+            button.btn.btn-sm.btn-danger.w-100(@click="finishTasks" :disabled="!selectedTasks.length || isLoading") 完了
+          .col.d-flex.align-items-center.px-1.px-sm-2(v-else)
+            button.btn.btn-sm.btn-danger.w-100.overflow-hidden(@click="unfinishTasks" :disabled="!selectedTasks.length || isLoading") 未完了に戻す
+      .col.px-1
+        button.btn.btn-sm.btn-outline-primary(@click="toAddPage" :disabled="isLoading")
+          svg(width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-plus" fill="currentColor" xmlns="http://www.w3.org/2000/svg")
+            path(fill-rule="evenodd" d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z")
     .row.row-cols-1(v-if="isLoading")
       task-loading
     .row.row-cols-1(v-else)
-      ul.col.list-group.px-1.px-sm-auto(v-if="selectedStatus === 'waiting' && waitingTasks.length")
+      ul.col.list-group.px-1(v-if="selectedStatus === 'waiting' && waitingTasks.length")
         li.list-group-item.list-group-item-action.d-flex.justify-content-between.align-items-center(v-for="task in waitingTasks" :key="task.id")
           .col-1.mr-1
             input.form-check-input(:id="task.id" :name="task.id" :value="task" v-model="selectedTasks" type="checkbox")
           .col-11.d-flex.justify-content-between.align-items-center(@click="selectTask(task.id)")
             h3.m-0 {{ task.title }}
             small {{ task.date }}
-      ul.col.list-group.px-1.px-sm-auto(v-else-if="selectedStatus === 'done' && finishedTasks.length")
+      ul.col.list-group.px-1(v-else-if="selectedStatus === 'done' && finishedTasks.length")
         li.list-group-item.list-group-item-action.d-flex.justify-content-between.align-items-center(v-for="task in finishedTasks" :key="task.id")
           .col-1.mr-1
             input.form-check-input(:id="task.id" :name="task.id" :value="task" v-model="selectedTasks" type="checkbox")
@@ -107,6 +113,9 @@ export default Vue.extend({
     selectTask(taskId: string){
       this.$router.push({name: 'TaskItem', params: {taskId}})
     },
+    toAddPage () {
+      this.$router.push({name: 'TaskAdd'})
+    }
   },
   watch: {
     selectedStatus() {

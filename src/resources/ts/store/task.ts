@@ -43,6 +43,10 @@ const mutations = {
   }
 }
 const actions = {
+  resetErrors({commit}: {commit: any}) {
+    commit('setErrorMessages', null)
+    commit('setLoading', false)
+  },
   async indexTasks({commit}: {commit: any}) {
     try {
       commit('setLoading', true)
@@ -61,11 +65,22 @@ const actions = {
       commit('setLoading', true)
       commit('setErrorMessages', null)
       await axios.get('sanctum/csrf-cookie')
-      const {data}: {data: Task[]} = await axios.put(`api/tasks/${task.id}`, task)
-      await commit('setTasks', data)
-      await commit('setLoading', false)
+      await axios.put(`api/tasks/${task.id}`, task)
+      commit('setLoading', false)
     } catch (error) {
       commit('setErrorMessages', error)
+      commit('setLoading', false)
+    }
+  },
+  async addTask({commit}: {commit: any}, task: Task) {
+    try {
+      commit('setLoading', true)
+      commit('setErrorMessages', null)
+      await axios.get('sanctum/csrf-cookie')
+      await axios.post('api/tasks', task)
+      commit('setLoading', false)
+    } catch ({message}) {
+      commit('setErrorMessages', message)
       commit('setLoading', false)
     }
   },

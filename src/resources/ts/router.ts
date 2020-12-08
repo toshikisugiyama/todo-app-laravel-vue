@@ -5,6 +5,7 @@ import Auth from './pages/Auth.vue'
 import TaskIndex from './pages/TaskIndex.vue'
 import TaskItem from './pages/TaskItem.vue'
 import TaskEdit from './pages/TaskEdit.vue'
+import TaskAdd from './pages/TaskAdd.vue'
 
 Vue.use(VueRouter)
 const routes = [
@@ -16,7 +17,8 @@ const routes = [
       {name: 'FinishedTaskIndex', path: 'done', component: TaskIndex},
     ],
   },
-  { path: '/login', name: 'Auth', component: Auth, },
+  { name: 'Auth', path: '/login', component: Auth, },
+  { name: 'TaskAdd', path: '/new', component: TaskAdd},
   { name: 'TaskItem', path: '/:taskId', component: TaskItem, },
   { name: 'TaskEdit', path: '/:taskId/edit', component: TaskEdit, },
 ]
