@@ -17,9 +17,9 @@ class CreateTasksTable extends Migration
             $table->id();
             $table->foreignId('user_id');
             $table->string('title', 100);
-            $table->text('note');
+            $table->text('note')->nullable();
             $table->date('date');
-            $table->string('status', 10);
+            $table->string('status', 10)->default('waiting');
             $table->timestamps();
         });
     }
