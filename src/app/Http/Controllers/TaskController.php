@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Task;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 
 class TaskController extends Controller
 {
@@ -50,7 +51,10 @@ class TaskController extends Controller
      */
     public function update(Request $request, Task $task)
     {
-        //
+        $task->find($request->id)
+            ->fill($request->all())
+            ->save();
+        return response($task->find($request->id));
     }
 
     /**

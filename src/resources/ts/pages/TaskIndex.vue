@@ -15,9 +15,7 @@
       .col.d-flex.align-items-center(v-else)
         button.btn.btn-sm.btn-danger.w-100.overflow-hidden(@click="unfinishTasks" :disabled="!selectedTasks.length || isLoading") 未完了に戻す
     .row.row-cols-1(v-if="isLoading")
-      .col.d-flex.justify-content-center
-        .spinner-border.m-5(role="status")
-          span.visually-hidden Loading...
+      task-loading
     .row.row-cols-1(v-else)
       ul.col.list-group.px-1.px-sm-auto(v-if="selectedStatus === 'waiting' && waitingTasks.length")
         li.list-group-item.list-group-item-action.d-flex.justify-content-between.align-items-center(v-for="task in waitingTasks" :key="task.id")
@@ -45,17 +43,21 @@
 
 <script lang="ts">
 import Vue from 'vue'
+import TaskLoading from '../components/TaskLoading.vue'
 interface Task {
-  created_at: string
-  date: string
-  id: number
-  note: string
-  status: string
-  title: string
-  updated_at: string
-  user_id: number
+  created_at?: string
+  date?: string
+  id?: number
+  note?: string
+  status?: string
+  title?: string
+  updated_at?: string
+  user_id?: number
 }
 export default Vue.extend({
+  components: {
+    TaskLoading
+  },
   data(){
     return {
       taskStatuses: [
@@ -71,10 +73,10 @@ export default Vue.extend({
       return this.$store.state.task.isLoading
     },
     waitingTasks(): Task[] {
-      return this.$store.getters['task/getWaitingTasks']
+      return this.$store.getters['task/getWaitingTasks'] || []
     },
     finishedTasks(): Task[] {
-      return this.$store.getters['task/getFinishedTasks']
+      return this.$store.getters['task/getFinishedTasks'] || []
     },
   },
   methods: {
@@ -87,18 +89,23 @@ export default Vue.extend({
     clearAll(){
       this.selectedTasks = []
     },
-    finishTasks(){
+    async changeStatus(status: string) {
       if (this.selectedTasks.length) {
-        console.log(this.selectedTasks)
+        await this.selectedTasks.map((task:Task) => {
+          task.status = status
+          this.$store.dispatch('task/editTask', task)
+        })
+        this.$store.dispatch('task/indexTasks')
       }
     },
-    unfinishTasks(){
-      if (this.selectedTasks.length) {
-        console.log(this.selectedTasks)
-      }
+    async finishTasks(){
+      await this.changeStatus('done')
+    },
+    async unfinishTasks(){
+      await this.changeStatus('waiting')
     },
     selectTask(taskId: string){
-      this.$router.push({path: `/${taskId}`, params: {taskId}})
+      this.$router.push({name: 'TaskItem', params: {taskId}})
     },
   },
   watch: {
@@ -111,7 +118,9 @@ export default Vue.extend({
     }
   },
   mounted() {
-    this.$store.dispatch('task/indexTasks')
+    if (!this.$store.state.task.tasks.length) {
+      this.$store.dispatch('task/indexTasks')
+    }
   }
 })
 </script>
