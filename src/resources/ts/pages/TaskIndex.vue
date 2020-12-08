@@ -16,8 +16,8 @@
             button.btn.btn-sm.btn-danger.w-100(@click="finishTasks" :disabled="!selectedTasks.length || isLoading") 完了
           .col.d-flex.align-items-center.px-1.px-sm-2(v-else)
             button.btn.btn-sm.btn-danger.w-100.overflow-hidden(@click="unfinishTasks" :disabled="!selectedTasks.length || isLoading") 未完了に戻す
-      .col.px-1
-        button.btn.btn-sm.btn-outline-primary(@click="toAddPage" :disabled="isLoading")
+      .col.px-1.d-flex
+        button.btn.btn-sm.btn-outline-primary.d-flex.align-items-center(@click="toAddPage" :disabled="isLoading")
           svg(width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-plus" fill="currentColor" xmlns="http://www.w3.org/2000/svg")
             path(fill-rule="evenodd" d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z")
     .row.row-cols-1(v-if="isLoading")
@@ -106,9 +106,11 @@ export default Vue.extend({
     },
     async finishTasks(){
       await this.changeStatus('done')
+      this.clearAll()
     },
     async unfinishTasks(){
       await this.changeStatus('waiting')
+      this.clearAll()
     },
     selectTask(taskId: string){
       this.$router.push({name: 'TaskItem', params: {taskId}})
