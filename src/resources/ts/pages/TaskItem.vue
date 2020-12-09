@@ -1,6 +1,6 @@
 <template lang="pug">
   .container.py-5.text-primary
-    .row.row-cols-1(v-if="isLoading")
+    .row.row-cols-1(v-if="isLoading || !selectedTask")
       task-loading
     .row.row-cols-1(v-else)
       .col
@@ -13,11 +13,15 @@
             span.small.text-right {{ selectedTask.date }}
           .col.mb-2
             p.lead.border.rounded.p-5 {{ selectedTask.note }}
-        .row.row-cols-auto.justify-content-center.align-items-center
+        .row.row-cols-auto.justify-content-between.align-items-center
           .col
-            button.btn.btn-sm.btn-primary(@click="goBack") 戻る
+            .row.row-cols-auto
+              .col
+                button.btn.btn-sm.btn-primary(@click="goBack") 戻る
+              .col
+                button.btn.btn-sm.btn-success(@click="toEdit") 編集
           .col
-            button.btn.btn-sm.btn-danger(@click="toEdit") 編集
+            button.btn.btn-sm.btn-danger(@click="deleteTask") 削除
 </template>
 
 <script lang="ts">
@@ -45,10 +49,17 @@ export default Vue.extend({
     },
     toEdit() {
       this.$router.push({name: 'TaskEdit'})
-    }
+    },
+    async deleteTask() {
+      if (confirm('削除してよろしいですか？')) {
+        await this.$store.dispatch('task/deleteTask', this.$route.params.taskId)
+        await this.$store.dispatch('task/indexTasks')
+        this.$router.push({name: 'TaskIndex'})
+      }
+    },
   },
   mounted() {
-    if (!this.$store.state.task.tasks) {
+    if (!this.$store.state.task.tasks.length) {
       this.$store.dispatch('task/indexTasks')
     }
   }

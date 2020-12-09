@@ -84,6 +84,18 @@ const actions = {
       commit('setLoading', false)
     }
   },
+  async deleteTask({commit}: {commit: any}, taskId: number | string) {
+    try {
+      commit('setLoading', true)
+      commit('setErrorMessages', null)
+      await axios.get('sanctum/csrf-cookie')
+      await axios.delete(`api/tasks/${taskId}`)
+      commit('setLoading', false)
+    } catch ({message}) {
+      commit('setErrorMessages', message)
+      commit('setLoading', false)
+    }
+  },
 }
 
 export default {
