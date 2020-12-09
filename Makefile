@@ -29,3 +29,5 @@ composer-i:
 	docker-compose exec php-fpm composer install
 npm-i:
 	docker-compose exec nginx npm install
+production:
+	docker-compose exec nginx npm run production
