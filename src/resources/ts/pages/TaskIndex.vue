@@ -1,7 +1,7 @@
 <template lang="pug">
   .container.py-5.text-primary
     .row.row-cols-1.justify-content-center
-      h2.col.text-center.mb-4 {{ selectedStatus === 'done' ? '完了済み' : '' }}タスク
+      h2.col.text-center.mb-4 {{ selectedStatus === 'done' ? '完了済み' : '' }}タスク一覧
     .row.row-cols-auto.justify-content-between.mb-2
       .col.px-1
         .row.row-cols-auto
@@ -75,6 +75,9 @@ export default Vue.extend({
     }
   },
   computed: {
+    routeName(): string {
+      return this.$route.name ?? 'TaskIndex'
+    },
     isLoading(): boolean {
       return this.$store.state.task.isLoading
     },
@@ -113,19 +116,24 @@ export default Vue.extend({
       this.clearAll()
     },
     selectTask(taskId: string){
-      this.$router.push({name: 'TaskItem', params: {taskId}})
+      this.$router.push({name: 'TaskItem', params: {taskId}}).catch(() => {})
     },
     toAddPage () {
-      this.$router.push({name: 'TaskAdd'})
+      this.$router.push({name: 'TaskAdd'}).catch(() => {})
     }
   },
   watch: {
     selectedStatus() {
       this.selectedTasks = []
       if (this.selectedStatus === 'done') {
-        return this.$router.push({name: 'FinishedTaskIndex'})
+        return this.$router.push({name: 'FinishedTaskIndex'}).catch(() => {})
       }
-      return this.$router.push({name: 'TaskIndex'})
+      return this.$router.push({name: 'TaskIndex'}).catch(() => {})
+    },
+    routeName () {
+      if (this.routeName === 'TaskIndex') {
+        this.selectedStatus = 'waiting'
+      }
     }
   },
   mounted() {
