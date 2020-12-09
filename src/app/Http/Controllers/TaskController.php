@@ -55,9 +55,7 @@ class TaskController extends Controller
      */
     public function update(Request $request, Task $task)
     {
-        $response = $task->find($request->id)
-            ->fill($request->all())
-            ->save();
+        $response = $task->fill($request->all())->save();
         return response()->json($response);
     }
 
