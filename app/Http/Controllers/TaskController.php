@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Task;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 
 class TaskController extends Controller
 {
@@ -68,6 +69,7 @@ class TaskController extends Controller
      */
     public function destroy(Task $task)
     {
-        //
+        $response = $task->delete();
+        return response()->json($response);
     }
 }
