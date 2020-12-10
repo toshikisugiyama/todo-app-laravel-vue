@@ -11,7 +11,7 @@ window._ = require('lodash')
  * CSRF token as a header based on the value of the "XSRF" token cookie.
  */
 window.axios = require('axios')
-window.axios.defaults.baseURL = 'http://localhost:3000'
+window.axios.defaults.baseURL = 'https://todo-app-2020-toshikisugiyama.herokuapp.com'
 window.axios.defaults.withCredentials = true
 window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest'
 
